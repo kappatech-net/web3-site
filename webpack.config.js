@@ -1,9 +1,13 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
+const dotenv = require('dotenv');
+
+// Load environment variables from .env file
+dotenv.config();
 
 module.exports = {
-  mode: 'production',
+  mode: process.env.NODE_ENV || 'production',
   entry: './src/app.js',
   output: {
     filename: 'bundle.js',
@@ -30,11 +34,14 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: './public/index.html',
+      template: path.resolve(__dirname, 'public', 'index.html'),
       filename: 'index.html',
     }),
     new webpack.DefinePlugin({
-      'process.env.INFURA_PROJECT_ID': JSON.stringify(process.env.INFURA_PROJECT_ID || 'default_project_id')
+      'process.env': JSON.stringify(process.env)
     }),
   ],
+  resolve: {
+    modules: [path.resolve(__dirname, 'src'), 'node_modules'],
+  },
 };
