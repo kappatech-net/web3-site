@@ -15,8 +15,8 @@
     "dotenv": "^10.0.0"
   },
   "scripts": {
-    "build": "node ./node_modules/webpack/bin/webpack.js --config webpack.config.js --mode=production",
-    "start": "node ./node_modules/webpack/bin/webpack.js serve --open --mode=development",
-    "build:fleek": "NODE_ENV=production npm run build"
+    "build": "webpack --config webpack.config.js",
+    "start": "webpack serve --open --mode=development",
+    "build:fleek": "npm install && NODE_ENV=production npm run build"
   }
 }
