@@ -54,7 +54,21 @@ function updateDIDInfo(message) {
   }
 }
 
-function initializeApp() {
+function waitForElement(id) {
+  return new Promise(resolve => {
+    const checkElement = () => {
+      const element = document.getElementById(id);
+      if (element) {
+        resolve(element);
+      } else {
+        requestAnimationFrame(checkElement);
+      }
+    };
+    checkElement();
+  });
+}
+
+async function initializeApp() {
   console.log('Initializing app');
   
   const elements = [
@@ -63,24 +77,22 @@ function initializeApp() {
     { id: 'jwt-verify-btn', handler: verifyDIDJWT }
   ];
 
-  elements.forEach(({ id, handler }) => {
-    const element = document.getElementById(id);
-    if (element) {
+  for (const { id, handler } of elements) {
+    try {
+      const element = await waitForElement(id);
       console.log(`Adding click event listener to ${id}`);
       element.addEventListener('click', handler);
-    } else {
-      console.error(`${id} element not found`);
+    } catch (error) {
+      console.error(`Error setting up listener for ${id}:`, error);
     }
-  });
+  }
 
   console.log('App initialization complete');
 }
 
-// Ensure the DOM is fully loaded before initializing
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initializeApp);
-} else {
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('DOM fully loaded');
   initializeApp();
-}
+});
 
 console.log('Script loaded');
