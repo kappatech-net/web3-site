@@ -3,7 +3,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 const dotenv = require('dotenv');
 
-// Load environment variables from .env file
 dotenv.config();
 
 module.exports = {
@@ -36,9 +35,10 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, 'public', 'index.html'),
       filename: 'index.html',
+      inject: 'body'
     }),
     new webpack.DefinePlugin({
-      'process.env': JSON.stringify(process.env)
+      'process.env.INFURA_PROJECT_ID': JSON.stringify(process.env.INFURA_PROJECT_ID || 'default_project_id')
     }),
   ],
   resolve: {
